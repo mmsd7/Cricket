@@ -1,0 +1,19 @@
+from PIL import Image, ImageFont, ImageDraw
+import os
+import random
+
+content = ['183 vs Pakistan', '166* vs Sri Lanka', '160* vs South Africa', '157* vs West Indies', '154* vs New Zealand',
+'140 vs West Indies', '139* vs Sri Lanka', '138 vs South Africa', '136 vs Bangladesh', '133* vs Sri Lanka', ]
+
+i = 0
+for player in content:
+    path = 'gen_image_bg/'
+    files = os.listdir(path)
+    randomFile = random.choice(files)
+    image = Image.open(path + '/' + randomFile)
+    text = player
+    font = ImageFont.truetype('THE BOLD FONT.ttf', 80)
+    draw = ImageDraw.Draw(image)
+    draw.text((150, 1565), text=text, font=font, fill= "White")
+    image.save('Generated_images_temp/'+f'{i}.jpg')
+    i +=1
