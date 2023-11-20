@@ -1,0 +1,11 @@
+from PIL import Image, ImageFont, ImageDraw
+import os
+
+i=0
+images = os.listdir('gen_image')
+for image in images:
+    img1 = Image.open('text_bg.png')
+    img2 = Image.open('gen_image/'+image)
+    final_bg = img2.paste(img1, (0,1500))
+    img2.save('gen_image_bg/'+f'{i}.jpg')
+    i += 1
