@@ -1,0 +1,16 @@
+import os
+from PIL import Image
+
+images = os.listdir('kohli')
+# print(images)
+
+for image in images:
+    img = Image.open('kohli/'+image)
+    w, h = img.size
+    width = 1080
+    # ratio = width / w
+    # height = int(ratio * h)
+    height = 1920
+
+    resize = img.resize((width, height))
+    resize.save('gen_image/'+image)
