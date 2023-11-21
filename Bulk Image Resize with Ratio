@@ -1,0 +1,14 @@
+import os
+from PIL import Image
+
+images = os.listdir('pasting')
+# print(images)
+
+for image in images:
+    img = Image.open('pasting/'+image)
+    w, h = img.size
+    width = 1080
+    ratio = width / w
+    height = int(ratio * h)
+    resize = img.resize((width, height))
+    resize.save('resized_with_ration/'+image)
