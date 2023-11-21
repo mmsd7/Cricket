@@ -1,0 +1,11 @@
+from PIL import Image, ImageOps
+import os
+
+
+images = os.listdir('Car_Images')
+for image in images:
+    img = Image.open('final.jpg')
+
+    img_with_border = ImageOps.expand(img, border=50, fill='yellow')
+
+    img_with_border.save('output/with-border.png')
