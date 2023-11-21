@@ -1,0 +1,10 @@
+from PIL import Image
+
+img = Image.open('Car_Images/pic.jpeg')
+w, h = img.size
+width = 1080
+ratio = width / w
+height = int(ratio * h)
+
+resize = img.resize((width, height))
+resize.save('final.jpg')
