@@ -1,0 +1,10 @@
+from PIL import Image
+
+img = Image.open('output/with-border.png')
+w, h = img.size
+width = 1080
+ratio = width / w
+height = int(ratio * h)
+
+resize = img.resize((width, height))
+resize.save('output/final_with_border.jpg')
