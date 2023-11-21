@@ -1,0 +1,13 @@
+from PIL import Image
+import os
+
+i=0
+images = os.listdir('resized_with_ration')
+for image in images:
+    # img1 = Image.open('text_bg.png')
+    # img2 = Image.open('gen_image/'+image)
+    img1 = Image.open('resized_with_ration/' + image)
+    img2 = Image.open('bg.jpg')
+    final_bg = img2.paste(img1, (0,0)) # First 0 is margin from let, Second 0 is margin from top
+    img2.save('final_for_pasting/'+f'{i}.jpg')
+    i += 1
