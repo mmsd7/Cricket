@@ -1,0 +1,9 @@
+from pygoogle_image import image as pi
+
+name = ['Rolls-Royce Boat Tail', 'Bugatti La Voiture Noire', 'Bugatti Centodieci',
+'Mercedes Maybach Exelero', 'Bugatti Divo', 'Koenigsegg CCXR Trevita',
+'Lamborghini Veneno', 'Bugatti Chiron Super Sport 300 +', 'Lamborghini Sian'
+'Pagani Huayra Roadster BC']
+
+for n in name:
+    pi.download(keywords=f'{n}', limit=10)
