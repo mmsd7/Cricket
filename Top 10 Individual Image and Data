@@ -1,0 +1,21 @@
+from PIL import Image, ImageFont, ImageDraw
+import os
+
+content = ['Jimmy Rane, $1.2 B', 'Arturo Moreno, $4.8 B', 'Jim Walton, $64.4 B']
+
+i = 0
+path = 'gen_image_bg/'
+files = os.listdir(path)
+
+for player in content:
+    if i < len(files):
+        image_file = os.path.join(path, files[i])
+        image = Image.open(image_file)
+        text = player
+        font = ImageFont.truetype('THE BOLD FONT.ttf', 80)
+        draw = ImageDraw.Draw(image)
+        draw.text((150, 1565), text=text, font=font, fill="White")
+        image.save('Generated_images_temp/' + f'{i}.jpg')
+        i += 1
+    else:
+        print(f"Not enough images in 'gen_image_bg/' to overlay text on all content items.")
