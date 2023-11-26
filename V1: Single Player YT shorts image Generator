@@ -1,0 +1,99 @@
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+import os
+import random
+
+# Function to resize images
+def resize_images(src_dir, dest_dir):
+    os.makedirs(dest_dir, exist_ok=True)
+    image_files = os.listdir(src_dir)
+
+    for image_file in image_files:
+        if image_file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            img = Image.open(os.path.join(src_dir, image_file))
+            w, h = img.size
+            width = 1040
+            ratio = width / w
+            height = int(ratio * h)
+            resize = img.resize((width, height))
+            dest_path = os.path.join(dest_dir, image_file)
+            resize.save(dest_path)
+
+# Function to add a border to images
+def add_border_to_images(src_dir, dest_dir, border_size=20, border_color='yellow'):
+    os.makedirs(dest_dir, exist_ok=True)
+    images = os.listdir(src_dir)
+
+    for image in images:
+        img = Image.open(os.path.join(src_dir, image))
+        img_with_border = ImageOps.expand(img, border=border_size, fill=border_color)
+        dest_path = os.path.join(dest_dir, f'with-border_{image}')
+        img_with_border.save(dest_path)
+
+# Function to overlay images on a background
+def overlay_images(src_dir, bg_image_path, dest_dir):
+    os.makedirs(dest_dir, exist_ok=True)
+    images = os.listdir(src_dir)
+
+    i = 0
+    for image in images:
+        img1 = Image.open(os.path.join(src_dir, image))
+        img2 = Image.open(bg_image_path)
+        img2.paste(img1, (0, 0))
+        dest_path = os.path.join(dest_dir, f'{i}.jpg')
+        img2.save(dest_path)
+        i += 1
+
+# Function to add a rectangle to images
+def add_rectangle_to_images(src_dir, dest_dir):
+    os.makedirs(dest_dir, exist_ok=True)
+    images = os.listdir(src_dir)
+    i = 0
+
+    for image in images:
+        img = Image.open(os.path.join(src_dir, image))
+        draw = ImageDraw.Draw(img)
+        draw.rectangle([(0, 1500), (1080, 1750)], fill=(144, 12, 63), outline='yellow', width=5)
+        img.save(os.path.join(dest_dir, f'{i}.jpg'))
+        i += 1
+
+# Function to overlay text on images
+def overlay_text_on_images(content, src_dir, dest_dir, font_path='THEBOLDFONT.ttf', text_position=(150, 1580), font_size=80, text_fill="White"):
+    os.makedirs(dest_dir, exist_ok=True)
+    files = os.listdir(src_dir)
+    i = 0
+
+    random.shuffle(files)
+
+    for player in content:
+        if i < len(files):
+            image_file = os.path.join(src_dir, files[i])
+            image = Image.open(image_file)
+            text = player
+            font = ImageFont.truetype(font_path, font_size)
+            draw = ImageDraw.Draw(image)
+            draw.text(text_position, text=text, font=font, fill=text_fill)
+            image.save(os.path.join(dest_dir, f'{i}.jpg'))
+            i += 1
+        else:
+            print(f"Not enough images in '{src_dir}' to overlay text on all content items.")
+
+def main():
+    src_directory = 'src_image'
+    gen_directory = 'gen_image'
+    border_directory = 'output'
+    pasting_directory = 'final_for_pasting'
+    text_bg_directory = 'with_text_bg'
+    temp_directory = 'Generated_images_temp'
+
+    resize_images(src_directory, gen_directory)
+    add_border_to_images(gen_directory, border_directory)
+    overlay_images(border_directory, 'bg.jpg', pasting_directory)
+    add_rectangle_to_images(pasting_directory, text_bg_directory)
+
+    with open("content.txt", 'r') as file:
+        content = file.readlines()
+    content = [x.strip() for x in content]
+    overlay_text_on_images(content, text_bg_directory, temp_directory)
+
+if __name__ == '__main__':
+    main()
