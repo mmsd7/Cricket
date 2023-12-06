@@ -1,0 +1,75 @@
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance  # Import ImageEnhance module
+import os
+import random
+
+# Function to wrap text based on maximum width
+def wrap_text(text, max_width, font):
+    lines = []
+    words = text.split(' ')
+    current_line = ''
+    for word in words:
+        test_line = current_line + word + ' '
+        line_width, _ = font.getsize(test_line)
+        if line_width <= max_width:
+            current_line = test_line
+        else:
+            lines.append(current_line[:-1])
+            current_line = word + ' '
+
+    lines.append(current_line[:-1])
+    return lines
+
+# Function to clean up a string for use as a filename
+def clean_filename(filename):
+    return ''.join(char if char.isalnum() or char in ('-', '_', ' ') else '_' for char in filename)
+
+# Function to add text to an image with a background
+def add_text_to_image(image, sentence, background_image):
+    # Load a suitable font with the desired size
+    font_size = 160
+    font = ImageFont.truetype("THE BOLD FONT.ttf", font_size)
+
+    # Apply line wrap if the text is longer than the image width
+    max_width = int(image.width * 0.9)
+    wrapped_text = wrap_text(sentence, max_width, font)
+
+    draw = ImageDraw.Draw(image)
+    line_spacing = 1.3  # Adjust this value based on your needs
+    x = (image.width - max_width) // 2
+    y = (image.height - int(font_size * len(wrapped_text) * line_spacing)) // 2
+
+    for line in wrapped_text:
+        line_width, _ = font.getsize(line)
+        draw.text(((image.width - line_width) // 2, y), line, (255, 195, 0), font=font)
+        y += int(font_size * line_spacing)
+
+    # Clean the sentence for use as a filename
+    clean_sentence = clean_filename(sentence)
+    # Save the image with the cleaned sentence as the filename
+    image.save('generated/' + f'{clean_sentence}.png')
+
+# Get a list of background images in a directory
+background_image_folder = 'background_images'
+background_images = [os.path.join(background_image_folder, filename) for filename in
+                     os.listdir(background_image_folder)]
+
+with open('text.txt', 'r') as file:
+    sentences = file.readlines()
+sentences = [x.strip() for x in sentences]
+
+# Create the 'generated' folder if it doesn't exist
+os.makedirs('generated', exist_ok=True)
+
+for item in sentences:
+    # Choose a random background image
+    background_image = random.choice(background_images)
+
+    # Load the background image
+    image = Image.open(background_image)
+
+    # Decrease the contrast of the background image by 50%
+    contrast_enhancer = ImageEnhance.Contrast(image)
+    image = contrast_enhancer.enhance(0.3)  # Decrease contrast by 50%
+
+    sentence = item
+    add_text_to_image(image, sentence, background_image)
